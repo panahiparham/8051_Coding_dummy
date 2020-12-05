@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 
 from bitarray import bitarray
 
@@ -8,22 +9,22 @@ class MicroController:
     def __init__(self):
         self.programStatusWord = {
             'CY': bitarray('0'),
-            'AC': bitarray('1'),
+            'AC': bitarray('0'),
             'F0': bitarray('0'),
             'RS1': bitarray('0'),
             'RS0': bitarray('0'),
-            'OV': bitarray('1'),
+            'OV': bitarray('0'),
             '-': bitarray('0'),
-            'P': bitarray('1'),
+            'P': bitarray('0'),
         }
 
-        self.A = bitarray('01001010')
+        self.A = bitarray('00000000')
 
         self.registerBanks = [
-            {'R0':bitarray('11111111'),
-             'R1':bitarray('01001010'),
+            {'R0':bitarray('00000000'),
+             'R1':bitarray('00000000'),
              'R2':bitarray('00000000'),
-             'R3':bitarray('01000010'),
+             'R3':bitarray('00000000'),
              'R4':bitarray('00000000'),
              'R5':bitarray('00000000'),
              'R6':bitarray('00000000'),
@@ -38,7 +39,7 @@ class MicroController:
              'R6':bitarray('00000000'),
              'R7':bitarray('00000000')
             },
-            {'R0':bitarray('11111111'),
+            {'R0':bitarray('00000000'),
              'R1':bitarray('00000000'),
              'R2':bitarray('00000000'),
              'R3':bitarray('00000000'),
@@ -53,8 +54,8 @@ class MicroController:
              'R3':bitarray('00000000'),
              'R4':bitarray('00000000'),
              'R5':bitarray('00000000'),
-             'R6':bitarray('11100001'),
-             'R7':bitarray('10000001')
+             'R6':bitarray('00000000'),
+             'R7':bitarray('00000000')
             }
         ]
         pass
@@ -105,9 +106,70 @@ class MicroController:
 class Program:
     def __init__(self, source):
         self.source = source
+        self.isCompiled = False
+
+
+    def _parseLine(line):
+
+        syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
+                 }
+
+
+
+        if re.fullmatch(r'\s*', line):
+            return {}
+
+
+        for key, val in syntax.items():
+            match = re.fullmatch(val, line)
+            if match:
+                print(match.groups())
+                command = match.group(1)
+                # print(line)
+                return {line}
+            else:
+                return None
+
+
+
+
 
     def compile(self):
+
+        self.executions = []
+
+        for line in self.source.split('\n'):
+
+            parsed = Program._parseLine(line)
+
+            if parsed == None:
+                self.isCompiled = False
+                return
+
+            if not len(parsed) == 0:
+                self.executions.append(parsed)
+
+        self.isCompiled = True
         pass
+
+
+
+    def __repr__(self):
+        s = '\n****************************** Program ************************************\n'
+
+
+        s += 'Source Code :'
+        s += '\n-----------\n'
+        s += self.source
+        s += '\n-----------\n'
+
+
+        s += '\nCompilation :'
+        s += '\n-----------\n'
+        s += 'Compilation Status: ' + str(self.isCompiled)
+        s += '\n-----------\n'
+
+        return s
 
 
 
@@ -141,7 +203,11 @@ def main():
     chip.execute(program)
 
     # Display MicroController's memory
-    print(chip)
+    # print(chip)
+
+
+    # print(program.executions)
+    # print(program.isCompiled)
 
 
 if __name__=='__main__':
