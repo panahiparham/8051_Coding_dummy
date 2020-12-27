@@ -5,7 +5,15 @@ import re
 from bitarray import bitarray
 
 
+##############################################
+# MicroController
+##############################################
 class MicroController:
+
+  
+##############################################
+    # internal memory structure
+  
     def __init__(self):
         self.programStatusWord = {
             'CY': bitarray('0'),
@@ -60,11 +68,173 @@ class MicroController:
         ]
         pass
 
+
+
     def _reset(self):
         pass
 
-    def execute(self, program):
+    def _getRegisterBank(self):
+        
+        if self.programStatusWord['RS1'] == bitarray('0'):
+            if self.programStatusWord['RS0'] == bitarray('0'):
+                return 0
+            else:
+                return 1
+        else:
+            if self.programStatusWord['RS0'] == bitarray('0'):
+                return 2
+            else:
+                return 3
+
+
+
+##############################################
+    # generic getter and setter for memory
+
+    def _readRegister(self, name):
+        if not (name in self.registerBanks[0].keys()  or name == 'A'):
+            raise ValueError('Incorrect Register name {}'.format(name))
+
+        rb = self._getRegisterBank()
+
+        if name == 'A':
+            data = self.A
+        else:
+            data = self.registerBanks[rb][name]
+
+        data = str(hex(int(data.to01(), 2))[2:])
+
+        data = '#' + data
+
+        data = data.upper()
+
+        return data
+
+
+    def _writeRegister(self, name, value):
+        if not (name in self.registerBanks[0].keys()  or name == 'A'):
+            raise ValueError('Incorrect Register name {}'.format(name))
+
+        data = value
+        if data[0] == '#':
+            data = data[1:]
+
+        if data[-1] == 'H' or data[-1] == 'h':
+            data = data[:-1]
+
+        data = data.lower()
+        data = int(data, 16)
+        data = bin(data)
+        data = data[2:]
+        data = data.zfill(8)
+        data = bitarray(data)
+
+        rb = self._getRegisterBank()
+
+        if name == 'A':
+            self.A = data
+        else:
+            self.registerBanks[rb][name] = data
+
+
+
+    def _readPSW(self, name):
+        if not (name in self.programStatusWord.keys()):
+            raise ValueError('Incorrect PSW name {}'.format(name))
+
         pass
+
+    def _writerPSW(self, name, value):
+        if not (name in self.programStatusWord.keys()):
+            raise ValueError('Incorrect PSW name {}'.format(name))
+
+        pass
+
+##############################################
+    # commands
+
+    def _nop(self):
+        print('runnig {}'.format(MicroController._nop.__name__))
+
+
+    def _mov(self, args):
+        print('runnig {} {}'.format(MicroController._mov.__name__, args))
+
+        if not len(args) == 2:
+            raise ValueError('incorrect args for _mov')
+
+        dst, src = args
+
+        if src[0] == '#':
+            self._writeRegister(dst, src)
+        else:
+            self._writeRegister(dst, self._readRegister(src))
+        
+
+
+##############################################
+    # direct command executions
+
+    def _exec(self, command, args=None, labelTable=None):
+
+
+        fn = getattr(MicroController, '_'+command)
+        jmp = fn(self, args)
+
+
+        if not jmp:
+            return -1
+        else:
+            if not jmp in labelTable.keys():
+                raise ValueError('Incorrect label {}'.format(jmp))
+            return labelTable[jmp]
+
+
+##############################################
+    # execution unit level execution
+
+    def execute(self, execUnit):
+
+        # code execution
+        # print(execUnit)
+
+        seq = self._exec(execUnit['command'], args=execUnit['args'], labelTable=self.labelTable)
+
+        # sequence 
+        if seq < 0:
+            return execUnit['sequenceNumber'] + 1
+        else:
+            return seq
+
+        
+
+
+##############################################
+    # program level execution
+    def run(self, program):
+        if not program.isCompiled:
+            print('Program is not compiled successfully!')
+            return
+
+        # temporarily save labelTable
+        self.labelTable = program.labelTable
+
+
+        # main loop for running the program
+        sequence = program.executions[0]['sequenceNumber']
+        while sequence < len(program.executions):
+            # print(program.executions[sequence])
+            sequence = self.execute(program.executions[sequence])
+
+
+
+        del self.labelTable
+        pass
+
+
+
+##############################################
+    # printing
 
     def __repr__(self):
 
@@ -100,59 +270,104 @@ class MicroController:
 
 
         return s
+##############################################
+# MicroController END
+##############################################
 
 
 
+##############################################
+# MicroController Program
+##############################################
 class Program:
+
+    # syntax for opcodes
+    syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
+            }
+
+
     def __init__(self, source):
+
         self.source = source
         self.isCompiled = False
 
+##############################################
+    # single line parsing
 
     def _parseLine(line):
 
-        syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
-                 }
+        executionUnit = {}
 
-
-
+        # check for emtpy line
         if re.fullmatch(r'\s*', line):
-            return {}
+            return executionUnit
 
+        # check for labels
+        labelRegex = re.compile(r'(\w+)\s*:\s*(.*)')
+        match = re.fullmatch(labelRegex, line)
 
-        for key, val in syntax.items():
-            match = re.fullmatch(val, line)
+        if match:
+            command = match.groups()[1]
+            executionUnit['label'] = match.groups()[0]
+
+        else:
+            command = line
+   
+        # check for opcodes
+        for key, val in Program.syntax.items():
+            match = re.fullmatch(val, command)
             if match:
-                print(match.groups())
-                command = match.group(1)
-                # print(line)
-                return {line}
+                executionUnit['command'] = key
+                executionUnit['args'] = match.groups()[1:]
+
+                return executionUnit
             else:
+                print("Error : Compilation Error at line ( {} )".format(line))
                 return None
 
 
 
-
+##############################################
+    # code compilation
 
     def compile(self):
 
         self.executions = []
+        self.labelTable = {}
 
         for line in self.source.split('\n'):
 
+            # parse each line
             parsed = Program._parseLine(line)
 
+            # emtpy line or syntax error
             if parsed == None:
                 self.isCompiled = False
                 return
 
+            # ok line
             if not len(parsed) == 0:
+                # add sequence number
+                parsed['sequenceNumber'] = len(self.executions)
+
+                # add labels to labelTable
+                if 'label' in parsed.keys():
+                    # check for duplicate labels
+                    if parsed['label'] in self.labelTable.keys():
+                        self.isCompiled = False
+                        print("Error : duplicate lablel ( {} )".format(parsed['label']))
+                        return
+
+                    self.labelTable[parsed['label']] = parsed['sequenceNumber']
+
                 self.executions.append(parsed)
 
         self.isCompiled = True
         pass
 
 
+##############################################
+    # printing
 
     def __repr__(self):
         s = '\n****************************** Program ************************************\n'
@@ -163,14 +378,13 @@ class Program:
         s += self.source
         s += '\n-----------\n'
 
-
-        s += '\nCompilation :'
-        s += '\n-----------\n'
         s += 'Compilation Status: ' + str(self.isCompiled)
         s += '\n-----------\n'
 
         return s
-
+##############################################
+# MicroController Program END
+##############################################
 
 
 
@@ -197,17 +411,31 @@ def main():
     # Create the Program
     program = Program(source)
     program.compile()
-    # print(program)
+    print(program)
 
     # run the Program on the MicroController
-    chip.execute(program)
+    chip.run(program)
 
     # Display MicroController's memory
-    # print(chip)
+    print(chip)
 
 
     # print(program.executions)
+    # print(program.labelTable)
     # print(program.isCompiled)
+
+    # chip._exec('nop')
+    # chip._mov(('R0', '#ff'))
+    # chip._mov(('R3', 'R0'))
+    # chip._mov(('R4', 'R1'))
+    # chip._mov(('R4', '#0E2'))
+    # chip._mov(('R4', '#02'))
+    # chip._mov(('A', '#A2'))
+    # chip._mov(('R6', 'A'))
+
+    # print(chip._readRegister('R0'))
+
+    # print(chip)
 
 
 if __name__=='__main__':
