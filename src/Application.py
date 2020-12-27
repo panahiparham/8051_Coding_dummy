@@ -15,7 +15,7 @@ from bitarray import bitarray
 ##############################################
 class MicroController:
 
-  
+
 ##############################################
     # internal memory structure
   
@@ -146,18 +146,27 @@ class MicroController:
         if not (name in self.programStatusWord.keys()):
             raise ValueError('Incorrect PSW name {}'.format(name))
 
-        pass
+        data = self.programStatusWord[name]
+        data = data.to01()
 
-    def _writerPSW(self, name, value):
+        return data
+
+
+    def _writePSW(self, name, value):
         if not (name in self.programStatusWord.keys()):
             raise ValueError('Incorrect PSW name {}'.format(name))
 
-        pass
+        if not (value == 1 or value == 0 or value == '1' or value == '0'):
+            raise ValueError('Incorrect bit value {} for {}'.format(value, name))
+
+        data = str(value)
+        data = bitarray(data)
+        self.programStatusWord[name] = data
 
 ##############################################
     # commands
 
-    def _nop(self):
+    def _nop(self, args):
         print('runnig {}'.format(MicroController._nop.__name__))
 
 
@@ -287,6 +296,7 @@ class Program:
 
     # syntax for opcodes
     syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
+              'nop': re.compile(r'(NOP)\s*'),
             }
 
 
@@ -317,17 +327,19 @@ class Program:
         else:
             command = line
    
+
         # check for opcodes
         for key, val in Program.syntax.items():
             match = re.fullmatch(val, command)
             if match:
                 executionUnit['command'] = key
                 executionUnit['args'] = match.groups()[1:]
-
                 return executionUnit
             else:
-                print("Error : Compilation Error at line ( {} )".format(line))
-                return None
+                continue
+        
+        print("Error : Compilation Error at line ( {} )".format(line))
+        return None
 
 
 
@@ -440,6 +452,11 @@ def main():
     # print(chip._readRegister('R0'))
 
     # print(chip)
+
+    # print(chip._readPSW('RS1'))
+    # chip._writePSW('RS1', '0')
+    # print(chip._readPSW('RS1'))
+
 
 
 if __name__=='__main__':
