@@ -19,7 +19,7 @@ class MicroController:
 ##############################################
     # internal memory structure
   
-    def __init__(self):
+    def _reset(self):
         self.programStatusWord = {
             'CY': bitarray('0'),
             'AC': bitarray('0'),
@@ -71,12 +71,11 @@ class MicroController:
              'R7':bitarray('00000000')
             }
         ]
-        pass
 
 
-
-    def _reset(self):
-        pass
+    def __init__(self):
+        self._reset()
+    
 
     def _getRegisterBank(self):
         
