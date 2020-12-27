@@ -1,3 +1,8 @@
+########
+# Author : Parham Mohammad Panahi
+# Date : Fall, Winter 2020
+########
+
 import sys
 import os
 import re
