@@ -166,6 +166,27 @@ class MicroController:
 ##############################################
     # commands
 
+    def _inc(self, args):
+        print('runnig {} {}'.format(MicroController._inc.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _inc')
+
+        data = self._readRegister(args[0])
+        data = data[1:]
+        data = data.lower()
+        data = int(data, 16)
+
+        if data == 255:
+            data = 0
+        else:
+            data = data + 1
+
+        data = hex(data)[2:]
+        self._writeRegister(args[0], data)
+
+        
+
     def _nop(self, args):
         print('runnig {}'.format(MicroController._nop.__name__))
 
@@ -297,6 +318,7 @@ class Program:
     # syntax for opcodes
     syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'nop': re.compile(r'(NOP)\s*'),
+              'inc': re.compile(r'(INC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
             }
 
 
