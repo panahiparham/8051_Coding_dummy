@@ -23,7 +23,7 @@ class MicroController:
         self.programStatusWord = {
             'CY': bitarray('0'),
             'AC': bitarray('0'),
-            'F0': bitarray('1'),
+            'F0': bitarray('0'),
             'RS1': bitarray('0'),
             'RS0': bitarray('0'),
             'OV': bitarray('0'),
@@ -165,8 +165,22 @@ class MicroController:
 
 ##############################################
     # commands
+    def _setb(self, args):
+        print('runnig {} {}'.format(MicroController._setb.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _setb')
+
+        reg = args[0]
+
+        if reg == 'C':
+            self.programStatusWord['CY'] = bitarray('1')
+        else:
+            self.programStatusWord[reg] = bitarray('1')
+
+
+
     def _clr(self, args):
-        # 'clr': re.compile(r'(CLR) \s*(A|C|AC|F0|RS1|RS0)\s*'),
         print('runnig {} {}'.format(MicroController._clr.__name__, args))
 
         if not len(args) == 1:
@@ -359,6 +373,7 @@ class Program:
               'inc': re.compile(r'(INC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
               'dec': re.compile(r'(DEC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
               'clr': re.compile(r'(CLR) \s*(A|C|AC|F0|RS1|RS0)\s*'),
+              'setb': re.compile(r'(SETB) \s*(C|AC|F0|RS1|RS0)\s*'),
             }
 
 
