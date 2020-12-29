@@ -166,6 +166,27 @@ class MicroController:
 ##############################################
     # commands
 
+    def _dec(self, args):
+        print('runnig {} {}'.format(MicroController._dec.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _dec')
+
+        data = self._readRegister(args[0])
+        data = data[1:]
+        data = data.lower()
+        data = int(data, 16)
+
+        if data == 0:
+            data = 255
+        else:
+            data = data - 1
+
+        data = hex(data)[2:]
+        self._writeRegister(args[0], data)
+
+
+
     def _inc(self, args):
         print('runnig {} {}'.format(MicroController._inc.__name__, args))
 
@@ -319,6 +340,7 @@ class Program:
     syntax = {'mov': re.compile(r'(MOV) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(A|R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'nop': re.compile(r'(NOP)\s*'),
               'inc': re.compile(r'(INC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
+              'dec': re.compile(r'(DEC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
             }
 
 

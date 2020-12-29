@@ -1,6 +1,7 @@
-MOV A, #ceH
-INC A
+MOV A, #01H
 MOV R4, A
 NOP
+DEC A
 NOP
 INC R4
+DEC A
