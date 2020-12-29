@@ -91,7 +91,6 @@ class MicroController:
                 return 3
 
 
-
 ##############################################
     # generic getter and setter for memory
 
@@ -162,6 +161,26 @@ class MicroController:
         data = str(value)
         data = bitarray(data)
         self.programStatusWord[name] = data
+
+##############################################
+    # parity
+    def _updateParity(self):
+        data = self._readRegister('A')
+
+        if data[0] == '#':
+            data = data[1:]
+
+        if data[-1] == 'H' or data[-1] == 'h':
+            data = data[:-1]
+
+        data = data.lower()
+        data = int(data, 16)
+        data = bin(data)
+        data = data[2:]
+        data = data.count('1')
+        data = data % 2
+        self._writePSW('P', data)
+
 
 ##############################################
     # commands
@@ -309,8 +328,9 @@ class MicroController:
         # main loop for running the program
         sequence = program.executions[0]['sequenceNumber']
         while sequence < len(program.executions):
-            # print(program.executions[sequence])
             sequence = self.execute(program.executions[sequence])
+            # update parity
+            self._updateParity()
 
 
 
