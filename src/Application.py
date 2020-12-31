@@ -274,6 +274,16 @@ class MicroController:
             self._writeRegister(dst, src)
         else:
             self._writeRegister(dst, self._readRegister(src))
+
+    def _sjmp(self, args):
+        print('runnig {} {}'.format(MicroController._sjmp.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _sjmp')
+
+        label = args[0]
+        
+        return label
         
 
 
@@ -301,7 +311,6 @@ class MicroController:
     def execute(self, execUnit):
 
         # code execution
-        # print(execUnit)
 
         seq = self._exec(execUnit['command'], args=execUnit['args'], labelTable=self.labelTable)
 
@@ -323,6 +332,7 @@ class MicroController:
 
         # temporarily save labelTable
         self.labelTable = program.labelTable
+
 
 
         # main loop for running the program
@@ -394,6 +404,7 @@ class Program:
               'dec': re.compile(r'(DEC) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*'),
               'clr': re.compile(r'(CLR) \s*(A|C|AC|F0|RS1|RS0)\s*'),
               'setb': re.compile(r'(SETB) \s*(C|AC|F0|RS1|RS0)\s*'),
+              'sjmp': re.compile(r'(SJMP) \s*(\w+)\s*'),
             }
 
 
