@@ -193,9 +193,9 @@ class MicroController:
         reg = args[0]
 
         if reg == 'C':
-            self.programStatusWord['CY'] = bitarray('1')
+            self._writePSW('CY', '1')
         else:
-            self.programStatusWord[reg] = bitarray('1')
+            self._writePSW(reg, '1')
 
 
 
@@ -208,11 +208,11 @@ class MicroController:
         reg = args[0]
 
         if reg == 'A':
-            self.A = bitarray('00000000')
+            self._writeRegister('A', '0')
         elif reg == 'C':
-            self.programStatusWord['CY'] = bitarray('0')
+            self._writePSW('CY', '0')
         else:
-            self.programStatusWord[reg] = bitarray('0')
+            self._writePSW(reg, '0')
 
 
 
