@@ -1,5 +1,5 @@
-MOV A, #00H
-JZ HERE
+MOV A, #f1H
+JNZ HERE
 MOV R0, #ffH
 HERE: MOV R1, #ffH
 NOP

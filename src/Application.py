@@ -6,6 +6,7 @@
 import sys
 import os
 import re
+import inspect
 
 from bitarray import bitarray
 
@@ -185,7 +186,8 @@ class MicroController:
 ##############################################
     # commands
     def _setb(self, args):
-        print('runnig {} {}'.format(MicroController._setb.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._setb.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _setb')
@@ -200,7 +202,8 @@ class MicroController:
 
 
     def _clr(self, args):
-        print('runnig {} {}'.format(MicroController._clr.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._clr.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _clr')
@@ -217,7 +220,8 @@ class MicroController:
 
 
     def _dec(self, args):
-        print('runnig {} {}'.format(MicroController._dec.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._dec.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _dec')
@@ -238,7 +242,8 @@ class MicroController:
 
 
     def _inc(self, args):
-        print('runnig {} {}'.format(MicroController._inc.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._inc.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _inc')
@@ -256,14 +261,16 @@ class MicroController:
         data = hex(data)[2:]
         self._writeRegister(args[0], data)
 
-        
+
 
     def _nop(self, args):
-        print('runnig {}'.format(MicroController._nop.__name__))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {}'.format(MicroController._nop.__name__))
 
 
     def _mov(self, args):
-        print('runnig {} {}'.format(MicroController._mov.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._mov.__name__, args))
 
         if not len(args) == 2:
             raise ValueError('incorrect args for _mov')
@@ -275,8 +282,10 @@ class MicroController:
         else:
             self._writeRegister(dst, self._readRegister(src))
 
+
     def _sjmp(self, args):
-        print('runnig {} {}'.format(MicroController._sjmp.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._sjmp.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _sjmp')
@@ -287,33 +296,31 @@ class MicroController:
 
 
     def _jz(self, args):
-        print('runnig {} {}'.format(MicroController._jz.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._jz.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _jz')
 
-        label = args[0]
-
         x = int(self._readRegister('A')[1:], 16)
 
         if x == 0:
-            return label
+            return self._sjmp(args)
         else:
             return None
 
 
     def _jnz(self, args):
-        print('runnig {} {}'.format(MicroController._jnz.__name__, args))
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._jnz.__name__, args))
 
         if not len(args) == 1:
             raise ValueError('incorrect args for _jnz')
 
-        label = args[0]
-
         x = int(self._readRegister('A')[1:], 16)
 
         if not x == 0:
-            return label
+            return self._sjmp(args)
         else:
             return None
 
