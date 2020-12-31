@@ -284,6 +284,39 @@ class MicroController:
         label = args[0]
         
         return label
+
+
+    def _jz(self, args):
+        print('runnig {} {}'.format(MicroController._jz.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _jz')
+
+        label = args[0]
+
+        x = int(self._readRegister('A')[1:], 16)
+
+        if x == 0:
+            return label
+        else:
+            return None
+
+
+    def _jnz(self, args):
+        print('runnig {} {}'.format(MicroController._jnz.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _jnz')
+
+        label = args[0]
+
+        x = int(self._readRegister('A')[1:], 16)
+
+        if not x == 0:
+            return label
+        else:
+            return None
+
         
 
 
@@ -405,6 +438,8 @@ class Program:
               'clr': re.compile(r'(CLR) \s*(A|C|AC|F0|RS1|RS0)\s*'),
               'setb': re.compile(r'(SETB) \s*(C|AC|F0|RS1|RS0)\s*'),
               'sjmp': re.compile(r'(SJMP) \s*(\w+)\s*'),
+              'jz': re.compile(r'(JZ) \s*(\w+)\s*'),
+              'jnz': re.compile(r'(JNZ) \s*(\w+)\s*'),
             }
 
 
