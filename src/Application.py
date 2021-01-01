@@ -344,6 +344,21 @@ class MicroController:
         else:
             return None
 
+    
+    def _jc(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._jc.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _jc')
+
+        c = self._readPSW('CY')
+
+        if int(c) == 1:
+            return self._sjmp(args)
+        else:
+            return None
+
 
 ##############################################
     # direct command executions
@@ -466,6 +481,7 @@ class Program:
               'jz': re.compile(r'(JZ) \s*(\w+)\s*'),
               'jnz': re.compile(r'(JNZ) \s*(\w+)\s*'),
               'djnz': re.compile(r'(DJNZ) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(\w+)\s*'),
+              'jc': re.compile(r'(JC) \s*(\w+)\s*'),
             }
 
 
