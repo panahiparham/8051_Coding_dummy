@@ -360,6 +360,21 @@ class MicroController:
             return None
 
 
+    def _jnc(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._jnc.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _jnc')
+
+        c = self._readPSW('CY')
+
+        if not int(c) == 1:
+            return self._sjmp(args)
+        else:
+            return None
+
+
 ##############################################
     # direct command executions
 
@@ -482,6 +497,7 @@ class Program:
               'jnz': re.compile(r'(JNZ) \s*(\w+)\s*'),
               'djnz': re.compile(r'(DJNZ) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(\w+)\s*'),
               'jc': re.compile(r'(JC) \s*(\w+)\s*'),
+              'jnc': re.compile(r'(JNC) \s*(\w+)\s*'),
             }
 
 
