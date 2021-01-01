@@ -324,7 +324,25 @@ class MicroController:
         else:
             return None
 
-        
+
+    def _djnz(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._djnz.__name__, args))
+
+        if not len(args) == 2:
+            raise ValueError('incorrect args for _djnz')
+
+        reg = args[0]
+        label = args[1]
+
+        self._dec((reg,))
+
+        x = int(self._readRegister(reg)[1:], 16)
+
+        if not x == 0:
+            return self._sjmp((label,))
+        else:
+            return None
 
 
 ##############################################
@@ -447,6 +465,7 @@ class Program:
               'sjmp': re.compile(r'(SJMP) \s*(\w+)\s*'),
               'jz': re.compile(r'(JZ) \s*(\w+)\s*'),
               'jnz': re.compile(r'(JNZ) \s*(\w+)\s*'),
+              'djnz': re.compile(r'(DJNZ) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(\w+)\s*'),
             }
 
 
