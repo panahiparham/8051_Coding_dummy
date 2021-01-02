@@ -374,6 +374,28 @@ class MicroController:
         else:
             return None
 
+    def _cjne(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._cjne.__name__, args))
+
+        if not len(args) == 3:
+            raise ValueError('incorrect args for _cjne')
+
+
+        op1 = int(self._readRegister(args[0])[1:], 16)
+        op2 = int(args[1][1:-1], 16)
+        label = args[2]
+
+        if op1 < op2:
+            self._setb(('C',))
+            return self._sjmp((label,))
+        elif op2 < op1:
+            self._clr(('C',))
+            return self._sjmp((label,))
+        else:
+            self._clr(('C',))
+            return None
+
 
 ##############################################
     # direct command executions
@@ -498,6 +520,7 @@ class Program:
               'djnz': re.compile(r'(DJNZ) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(\w+)\s*'),
               'jc': re.compile(r'(JC) \s*(\w+)\s*'),
               'jnc': re.compile(r'(JNC) \s*(\w+)\s*'),
+              'cjne': re.compile(r'(CJNE) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(#[0-9a-fA-F]*H)\s*,\s*(\w+)\s*'),
             }
 
 
