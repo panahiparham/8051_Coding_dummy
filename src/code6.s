@@ -8,3 +8,5 @@ ORL A, #5H
 MOV R0, #ffH
 
 ORL A, R0
+
+XRL A, R3
