@@ -57,6 +57,10 @@ RegisterBank 3 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
 
  The final step is a visual of the register banks and PSW of the micro controller after the program has been executed. as you can see R1 = ff,  R0 = 0 which means the jump has happened as desired and that the carry flag CY = 1 in accordance with the specification of the CJNE opcode.</br>
 
+### Compilation process
 
+the steps taken to execute the program is as follows: 
+* the source code is read as text and each line is checked for matching syntax.
+* if match found, a command will be added to the list of commands to be executed and if no match is found or if there is a problem with the syntax nothing will run and `Compilation Status` will be False along with the line where the first error happened.
 
 </br>*this is a work in progress*</br>
