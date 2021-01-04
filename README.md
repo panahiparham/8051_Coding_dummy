@@ -170,7 +170,7 @@ i hope this will be a useful tool for anyone learning to program the 8051 micro 
 
 this project is imagined for the final project of my "introduction to microprocessor" class and i hope will be a useful tool for my teacher and classmates.</br>
 
-i will be adding more and more featues as time allows and will maintain
+i will be adding more and more featues as time allows
 
 
 
