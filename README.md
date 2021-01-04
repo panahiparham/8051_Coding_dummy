@@ -61,6 +61,43 @@ RegisterBank 3 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
 
 the steps taken to execute the program is as follows: 
 * the source code is read as text and each line is checked for matching syntax.
-* if match found, a command will be added to the list of commands to be executed and if no match is found or if there is a problem with the syntax nothing will run and `Compilation Status` will be False along with the line where the first error happened.
+* if match found, a command will be added to the list of commands to be executed and if no match is found or if there is a problem with the syntax nothing will run and `Compilation Status` will be False along with a print of the line where the first error happened. for example for this code : 
+
+```
+MOV R4,#baH
+CJNE R4, #bbH, HERE
+MOV R0, #ffH
+NOT AN OPCODE
+HERE: MOV R1, #ffH
+```
+
+the output will be :
+
+```
+(venv) C:\DEV\8051_Coding_dummy\src>python Application.py code5.s
+Error : Compilation Error at line ( NOT AN OPCODE )
+
+****************************** Program ************************************
+Source Code :
+-----------
+MOV R4,#baH
+CJNE R4, #bbH, HERE
+MOV R0, #ffH
+NOT AN OPCODE
+HERE: MOV R1, #ffH
+-----------
+Compilation Status: False
+-----------
+
+Program is not compiled successfully!
+
+****************************** 8051's memory********************************
+PSW : CY 0  AC 0  F0 0  RS1 0  RS0 0  OV 0  - 0  P 0
+A : 0
+RegisterBank 0 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
+RegisterBank 1 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
+RegisterBank 2 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
+RegisterBank 3 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
+```
 
 </br>*this is a work in progress*</br>

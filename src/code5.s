@@ -1,4 +1,5 @@
 MOV R4,#baH
 CJNE R4, #bbH, HERE
 MOV R0, #ffH
+NOT AN OPCODE
 HERE: MOV R1, #ffH
