@@ -19,7 +19,7 @@ MOV R0, #ffH
 HERE: MOV R1, #ffH
 ```
 
-which is just 2 MOV commands and one jump command
+which is just 2 MOV commands and one jump command. first we move #ba hex value into R4 register then we compare the value of R4 with #bb and if they're not equal (which they aren't) the program will jump to the HERE label and move #ff into R1, leaving R0 unchanged.</br>
 
 
 </br>*this is a work in progress*</br>
