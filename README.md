@@ -160,6 +160,15 @@ JNC label
 CJNE A, #34H, label
 CJNE R6, #34H, label
 
+ANL A, #f2H
+ANL A, R5
+
+ORL A, #f2H
+ORL A, R5
+
+XRL A, #f2H
+XRL A, R5
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
