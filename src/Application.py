@@ -396,6 +396,26 @@ class MicroController:
             self._clr(('C',))
             return None
 
+    def _anl(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._anl.__name__, args))
+
+        if not len(args) == 2:
+            raise ValueError('incorrect args for _anl')
+
+        x = int(self._readRegister(args[0])[1:], 16)
+        
+        if '#' in args[1] and 'H' in args[1]:
+            y = int(args[1][1:-1], 16)
+        else:
+            y = int(self._readRegister(args[1])[1:], 16)
+
+        value =  hex(x & y)[2:]
+
+        self._writeRegister(args[0], value)
+
+        
+
 
 ##############################################
     # direct command executions
@@ -521,6 +541,7 @@ class Program:
               'jc': re.compile(r'(JC) \s*(\w+)\s*'),
               'jnc': re.compile(r'(JNC) \s*(\w+)\s*'),
               'cjne': re.compile(r'(CJNE) \s*(A|R0|R1|R2|R3|R4|R5|R6|R7|)\s*,\s*(#[0-9a-fA-F]*H)\s*,\s*(\w+)\s*'),
+              'anl': re.compile(r'(ANL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*')
             }
 
 

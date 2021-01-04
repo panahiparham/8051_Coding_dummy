@@ -1,0 +1,4 @@
+MOV A,#ffH
+MOV R3, #12H
+ANL A, R3
+ANL A, #3H
