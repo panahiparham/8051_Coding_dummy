@@ -110,5 +110,13 @@ there are 2 kinds of errors
 * syntax errors are related to parsing of each line and will result in Compilation faliure and nothing will be ran.
 * runtime errors are related to incorrect values and labels and will raise exceptions with related error message.
 
+### supported opcodes and small details
+
+first of all 2 kind of addressing is allowed : 
+* register names
+* immediate values
+
+(meaning that memory location addressing is not supported)</br>
+
 
 </br>*this is a work in progress*</br>
