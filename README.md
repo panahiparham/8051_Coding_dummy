@@ -118,5 +118,61 @@ first of all 2 kind of addressing is allowed :
 
 (meaning that memory location addressing is not supported)</br>
 
+all of the opcode and the H at the end of hex values need to be uppercase.</br>
+here is a list of all opcodes supported:
+```
+MOV A, #f3H
+MOV A, R4
+MOV R7, #e5H
+
+NOP
+
+INC A
+INC R5
+
+DEC A
+DEC R0
+
+CLR A
+CLR C
+CLR AC
+CLR F0
+CLR RS1
+CLR RS0
+
+SETB C
+SETB AC
+SETB F0
+SETB RS1
+SETB RS0
+
+SJMP label
+
+JZ label
+JNZ lebel
+
+DJNZ R4, label
+DJNZ A, label
+
+JC label
+JNC label
+
+CJNE A, #34H, label
+CJNE R6, #34H, label
+
+```
+
+this list will be updated as i add more and more opcodes.</br>
+
+### the contex, usecase and the future
+
+i hope this will be a useful tool for anyone learning to program the 8051 micro controller and is still a beginner looking for a tool to practice programming.</br>
+
+this project is imagined for the final project of my "introduction to microprocessor" class and i hope will be a useful tool for my teacher and classmates.</br>
+
+i will be adding more and more featues as time allows and will maintain
+
+
+
 
 </br>*this is a work in progress*</br>
