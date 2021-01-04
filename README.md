@@ -168,7 +168,7 @@ this list will be updated as i add more and more opcodes.</br>
 
 i hope this will be a useful tool for anyone learning to program the 8051 micro controller and is still a beginner looking for a tool to practice programming.</br>
 
-this project is imagined for the final project of my "introduction to microprocessor" class and i hope will be a useful tool for my teacher and classmates.</br>
+this project is imagined for the final project of my "introduction to microprocessor" class and i hope it  will be a useful tool for my teacher and classmates.</br>
 
 i will be adding more and more featues as time allows
 
