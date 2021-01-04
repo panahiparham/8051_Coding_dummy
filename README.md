@@ -10,7 +10,16 @@ To use this App all you need is python 3 and the modules listed in `requirements
 then you can head into src folder and run `python Application.py code.s` in which `code.s` is the assembly code you wish to run.</br>
 
 ### Examples
+for examle you can take a look at some of the code samples already in `/src`. for instance let's take a look at `code5.s` and run it, here is the code in `code5.s`
 
+```
+MOV R4,#baH
+CJNE R4, #bbH, HERE
+MOV R0, #ffH
+HERE: MOV R1, #ffH
+```
+
+which is just 2 MOV commands and one jump command
 
 
 </br>*this is a work in progress*</br>
