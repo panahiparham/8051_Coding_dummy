@@ -51,7 +51,11 @@ RegisterBank 3 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
 ```
 
 
- the output is somewhat long but self explanatory, let's walkthrought the output. first is the source code of the program.
+ the output is somewhat long but self explanatory, let's walkthrought the output. first is the source code of the program. then a status flag for compilation is printed. if there is any syntax error the compilation will fail and no code will be ran (the memory values will stay at their default value of 0) the compilation status will also print False.</br>
+
+ given that program compiled successfully next is a squence of all commands executed, this will be useful when creating loops and branches, too see what exactly ran and how many times.</br>
+
+ The final step is a visual of the register banks and PSW of the micro controller after the program has been executed. as you can see R1 = ff,  R0 = 0 which means the jump has happened as desired and that the carry flag CY = 1 in accordance with the specification of the CJNE opcode.</br>
 
 
 
