@@ -1,4 +1,10 @@
 MOV A,#ffH
 MOV R3, #12H
 ANL A, R3
-ANL A, #3H
+ANL A, #11H
+
+ORL A, #5H
+
+MOV R0, #ffH
+
+ORL A, R0
