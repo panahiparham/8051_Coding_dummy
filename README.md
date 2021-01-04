@@ -99,4 +99,16 @@ RegisterBank 2 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
 RegisterBank 3 : R0:0   R1:0    R2:0    R3:0    R4:0    R5:0    R6:0    R7:0
 ```
 
+* then the squence of commands are ran inside a loop and each command will determine the next command to be executed, this way jumps and labels are handled.
+
+* finally each command is associated with an internal function which does the work of that opcode.
+
+### Errors
+
+there are 2 kinds of errors
+
+* syntax errors are related to parsing of each line and will result in Compilation faliure and nothing will be ran.
+* runtime errors are related to incorrect values and labels and will raise exceptions with related error message.
+
+
 </br>*this is a work in progress*</br>
