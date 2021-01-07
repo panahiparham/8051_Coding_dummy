@@ -470,6 +470,23 @@ class MicroController:
         data = hex(data)[2:]
         self._writeRegister('A', data)
 
+
+
+    def _rl(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._rl.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _rl')
+
+        data = self._readRegister('A')[1:]
+        data = int(data, 16)
+        data = bin(data)[2:]
+        data = data.zfill(8)
+        data = data[1:] + data[0]
+        data = int(data, 2)
+        data = hex(data)[2:]
+        self._writeRegister('A', data)
         
 
 ##############################################
@@ -600,6 +617,7 @@ class Program:
               'orl': re.compile(r'(ORL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'xrl': re.compile(r'(XRL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'rr': re.compile(r'(RR) \s*(A)\s*'),
+              'rl': re.compile(r'(RL) \s*(A)\s*'),
             }
 
 

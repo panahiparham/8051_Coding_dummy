@@ -1,2 +1,3 @@
-MOV A, #beH
+MOV A, #cdH
 RR A
+RL A

@@ -171,6 +171,8 @@ XRL A, R5
 
 RR A
 
+RL A
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
