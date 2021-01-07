@@ -1,4 +1,5 @@
 MOV A, #9cH
 CLR C
 
+RLC A
 RRC A

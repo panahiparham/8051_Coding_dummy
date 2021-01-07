@@ -518,6 +518,29 @@ class MicroController:
         
         self._writeRegister('A', accumulator)
         self._writePSW('CY', carry)
+
+
+    def _rlc(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._rlc.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _rlc')
+
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _rlc')
+
+        carry = self._readPSW('CY')
+        accumulator = self._readRegister('A')[1:]
+        accumulator = int(accumulator, 16)
+        accumulator = bin(accumulator)[2:]
+        accumulator = accumulator.zfill(8)
+        accumulator, carry = accumulator[1:] + carry, accumulator[0]
+        accumulator = int(accumulator, 2)
+        accumulator = hex(accumulator)[2:]
+        
+        self._writeRegister('A', accumulator)
+        self._writePSW('CY', carry)
         
 
 ##############################################
@@ -650,6 +673,7 @@ class Program:
               'rr': re.compile(r'(RR) \s*(A)\s*'),
               'rl': re.compile(r'(RL) \s*(A)\s*'),
               'rrc': re.compile(r'(RRC) \s*(A)\s*'),
+              'rlc': re.compile(r'(RLC) \s*(A)\s*'),
             }
 
 

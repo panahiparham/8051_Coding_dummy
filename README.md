@@ -175,6 +175,8 @@ RL A
 
 RRC A
 
+RLC A
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
