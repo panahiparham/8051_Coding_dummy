@@ -1,2 +1,6 @@
 MOV A, #4eH
 SWAP A
+
+MOV R0, #ffH
+
+XCH A, R0

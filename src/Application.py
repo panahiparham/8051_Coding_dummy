@@ -557,6 +557,24 @@ class MicroController:
         accumulator = accumulator[-1] + accumulator[:-1]
         self._writeRegister('A', accumulator)
 
+
+    def _xch(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._xch.__name__, args))
+
+        if not len(args) == 2:
+            raise ValueError('incorrect args for _xch')
+
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _xch')
+
+        accumulator = self._readRegister('A')[1:]
+        register = self._readRegister(args[1])[1:]
+
+        self._writeRegister('A', register)
+        self._writeRegister(args[1], accumulator)
+
+
         
 
 ##############################################
@@ -691,6 +709,7 @@ class Program:
               'rrc': re.compile(r'(RRC) \s*(A)\s*'),
               'rlc': re.compile(r'(RLC) \s*(A)\s*'),
               'swap': re.compile(r'(SWAP) \s*(A)\s*'),
+              'xch': re.compile(r'(XCH) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7)\s*'),
             }
 
 

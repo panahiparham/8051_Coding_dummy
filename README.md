@@ -179,6 +179,8 @@ RLC A
 
 SWAP A
 
+XCH A, R0
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
