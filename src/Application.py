@@ -461,6 +461,9 @@ class MicroController:
         if not len(args) == 1:
             raise ValueError('incorrect args for _rr')
 
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _rr')
+
         data = self._readRegister('A')[1:]
         data = int(data, 16)
         data = bin(data)[2:]
@@ -468,6 +471,7 @@ class MicroController:
         data = data[-1] + data[:-1]
         data = int(data, 2)
         data = hex(data)[2:]
+
         self._writeRegister('A', data)
 
 
@@ -479,6 +483,9 @@ class MicroController:
         if not len(args) == 1:
             raise ValueError('incorrect args for _rl')
 
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _rl')
+
         data = self._readRegister('A')[1:]
         data = int(data, 16)
         data = bin(data)[2:]
@@ -486,7 +493,31 @@ class MicroController:
         data = data[1:] + data[0]
         data = int(data, 2)
         data = hex(data)[2:]
+
         self._writeRegister('A', data)
+
+
+    def _rrc(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._rrc.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _rrc')
+
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _rrc')
+
+        carry = self._readPSW('CY')
+        accumulator = self._readRegister('A')[1:]
+        accumulator = int(accumulator, 16)
+        accumulator = bin(accumulator)[2:]
+        accumulator = accumulator.zfill(8)
+        accumulator, carry = carry + accumulator[:-1], accumulator[-1]
+        accumulator = int(accumulator, 2)
+        accumulator = hex(accumulator)[2:]
+        
+        self._writeRegister('A', accumulator)
+        self._writePSW('CY', carry)
         
 
 ##############################################
@@ -618,6 +649,7 @@ class Program:
               'xrl': re.compile(r'(XRL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'rr': re.compile(r'(RR) \s*(A)\s*'),
               'rl': re.compile(r'(RL) \s*(A)\s*'),
+              'rrc': re.compile(r'(RRC) \s*(A)\s*'),
             }
 
 

@@ -1,0 +1,4 @@
+MOV A, #9cH
+CLR C
+
+RRC A
