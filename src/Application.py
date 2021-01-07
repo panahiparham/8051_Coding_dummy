@@ -541,6 +541,22 @@ class MicroController:
         
         self._writeRegister('A', accumulator)
         self._writePSW('CY', carry)
+
+
+    def _swap(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._swap.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _swap')
+
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _swap')
+
+        accumulator = self._readRegister('A')[1:]
+        accumulator = accumulator[-1] + accumulator[:-1]
+        self._writeRegister('A', accumulator)
+
         
 
 ##############################################
@@ -674,6 +690,7 @@ class Program:
               'rl': re.compile(r'(RL) \s*(A)\s*'),
               'rrc': re.compile(r'(RRC) \s*(A)\s*'),
               'rlc': re.compile(r'(RLC) \s*(A)\s*'),
+              'swap': re.compile(r'(SWAP) \s*(A)\s*'),
             }
 
 

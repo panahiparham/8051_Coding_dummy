@@ -1,0 +1,2 @@
+MOV A, #4eH
+SWAP A
