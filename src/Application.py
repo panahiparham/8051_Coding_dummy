@@ -453,8 +453,24 @@ class MicroController:
 
         self._writeRegister(args[0], value)
 
-        
 
+    def _rr(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._rr.__name__, args))
+
+        if not len(args) == 1:
+            raise ValueError('incorrect args for _rr')
+
+        data = self._readRegister('A')[1:]
+        data = int(data, 16)
+        data = bin(data)[2:]
+        data = data.zfill(8)
+        data = data[-1] + data[:-1]
+        data = int(data, 2)
+        data = hex(data)[2:]
+        self._writeRegister('A', data)
+
+        
 
 ##############################################
     # direct command executions
@@ -583,6 +599,7 @@ class Program:
               'anl': re.compile(r'(ANL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'orl': re.compile(r'(ORL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
               'xrl': re.compile(r'(XRL) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*'),
+              'rr': re.compile(r'(RR) \s*(A)\s*'),
             }
 
 

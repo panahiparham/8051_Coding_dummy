@@ -169,6 +169,8 @@ ORL A, R5
 XRL A, #f2H
 XRL A, R5
 
+RR A
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
