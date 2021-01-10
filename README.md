@@ -185,7 +185,7 @@ XCH A, R0
 
 this list will be updated as i add more and more opcodes.</br>
 
-### the contex, usecase and the future
+### the usecase and the future
 
 i hope this will be a useful tool for anyone learning to program the 8051 micro controller and is still a beginner looking for a tool to practice programming.</br>
 
