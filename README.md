@@ -119,7 +119,7 @@ first of all 2 kind of addressing is allowed :
 (meaning that memory location addressing is not supported)</br>
 
 all of the opcode and the H at the end of hex values need to be uppercase.</br>
-here is a list of all opcodes supported:
+here is a list of all supported opcodes:
 ```
 MOV A, #f3H
 MOV A, R4
@@ -197,3 +197,15 @@ i will be adding more and more featues as time allows
 
 
 </br>*this is a work in progress*</br>
+
+```
+TOOD:
+    * _add
+    * _addc
+    * _subb
+    * B register
+    * _mul
+    * _div
+    * stack
+    ...
+```
