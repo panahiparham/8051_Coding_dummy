@@ -181,6 +181,10 @@ SWAP A
 
 XCH A, R0
 
+ADD A, R4
+
+ADD A, #34H
+
 ```
 
 this list will be updated as i add more and more opcodes.</br>
@@ -200,7 +204,7 @@ i will be adding more and more featues as time allows
 
 ```
 TOOD:
-    * _add
+    * _add  DONE
     * _addc
     * _subb
     * B register

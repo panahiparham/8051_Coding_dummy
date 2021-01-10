@@ -575,6 +575,54 @@ class MicroController:
         self._writeRegister(args[1], accumulator)
 
 
+    def _add(self, args):
+        if inspect.stack()[1][3] == '_exec':
+            print('runnig {} {}'.format(MicroController._add.__name__, args))
+
+        if not len(args) == 2:
+            raise ValueError('incorrect args for _add')
+
+        if not args[0] == 'A':
+            raise ValueError('incorrect args for _add')
+
+
+        accumulator = self._readRegister(args[0])[1:]
+        int_accumulator = int(accumulator, 16)
+        bin_accumulator = bin(int_accumulator)[2:].zfill(8)
+
+        if 'R' in args[1]:
+            operand = self._readRegister(args[1])[1:]
+
+        else:
+            operand = args[1][1:-1]
+
+        int_operand = int(operand, 16)
+        bin_operand = bin(int_operand)[2:].zfill(8)
+
+        sum = int_accumulator + int_operand
+        
+
+        if sum > 255:
+            self._setb('C')
+            self._writePSW('OV', 1)
+            sum = sum % 256
+        else:
+            self._clr('C')
+            self._writePSW('OV', 0)
+
+        low_accumulator = int(bin_accumulator[4:], 2)
+        low_operand = int(bin_operand[4:], 2)
+
+        if low_accumulator + low_operand > 15:
+            self._writePSW('AC', 1)
+        else:
+            self._writePSW('AC', 0)
+
+
+        sum = hex(sum)[2:]
+
+        self._writeRegister(args[0], sum)
+
         
 
 ##############################################
@@ -710,6 +758,7 @@ class Program:
               'rlc': re.compile(r'(RLC) \s*(A)\s*'),
               'swap': re.compile(r'(SWAP) \s*(A)\s*'),
               'xch': re.compile(r'(XCH) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7)\s*'),
+              'add': re.compile(r'(ADD) \s*(A)\s*,\s*(R0|R1|R2|R3|R4|R5|R6|R7|#[0-9a-fA-F]*H)\s*')
             }
 
 

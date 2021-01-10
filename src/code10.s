@@ -1,0 +1,7 @@
+MOV A, #87H
+
+ADD A, #02H
+
+MOV R4, #1dH
+
+ADD A, R4
